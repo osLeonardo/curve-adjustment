@@ -34,8 +34,7 @@ export class AppComponent implements OnInit {
   }
 
   createChart(): void {
-    Chart.register(...registerables); // Register all necessary components, including scales
-
+    Chart.register(...registerables);
     const ctx = this.canvas.nativeElement.getContext('2d');
 
     if (ctx) {

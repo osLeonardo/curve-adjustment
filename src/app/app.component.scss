@@ -2,30 +2,32 @@
   display: flex;
   flex-direction: row;
   height: 100dvh;
-  width: 100dvw;
   padding: 10px;
 }
 
 .graph {
   display: block;
-  width: 75%;
+  width: 70%;
 }
 
 .inputs {
   display: flex;
   flex-direction: row;
-  padding: 5px;
   gap: 5px;
 }
 
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 5px;
 }
 
 .button-pair {
+  padding-bottom: 5px;
   display: flex;
   flex-direction: row;
   gap: 5px;
+
+  button {
+    flex: 1;
+  }
 }

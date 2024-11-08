@@ -3,12 +3,12 @@
     <form (ngSubmit)="addData()">
       <span class="buttons">
         <span class="button-pair">
-          <button mat-stroked-button type="button" (click)="addPair()">Add Pair</button>
-          <button mat-stroked-button type="button" (click)="removePair()">Remove Pair</button>
+          <button mat-flat-button type="button" (click)="addPair()">Add Pair</button>
+          <button mat-flat-button type="button" (click)="removePair()">Remove Pair</button>
         </span>
         <span class="button-pair">
-          <button mat-stroked-button type="submit">Update Chart</button>
-          <button mat-stroked-button type="button" (click)="resetChart()">Reset Chart</button>
+          <button mat-flat-button type="submit">Update Chart</button>
+          <button mat-flat-button type="button" (click)="resetChart()">Reset Chart</button>
         </span>
       </span>
       @for (pair of dataPairs; track pair; let i = $index) {
