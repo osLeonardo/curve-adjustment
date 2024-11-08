@@ -21,11 +21,10 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class AppComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
-  defaultPair = { x: 0, y: 0 };
-  // defaultPair = [{ x: 10, y: 20 }, { x: 25, y: 30 },{ x: 90, y: 50 }];
+  //defaultPair = [{ x: 0, y: 0 }];
+  defaultPair = [{ x: 10, y: 20 }, { x: 25, y: 30 },{ x: 90, y: 50 }];
   public chart: any;
-  public dataPairs: { x: number, y: number }[] = [this.defaultPair];
-  // public dataPairs: { x: number, y: number }[] = this.defaultPair;
+  public dataPairs: { x: number, y: number }[] = this.defaultPair;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -43,45 +42,59 @@ export class AppComponent implements OnInit {
       this.chart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: this.dataPairs.map(pair => pair.x),
           datasets: [
             {
               label: 'Função',
-              data: this.dataPairs.map(pair => pair.y),
+              data: this.dataPairs,
+              parsing: {
+                xAxisKey: 'x',
+                yAxisKey: 'y'
+              },
               borderColor: '#3cba9f',
               fill: false,
               tension: 0.3,
             },
             {
               label: 'Pontos X, Y',
-              data: this.dataPairs.map(pair => pair.y), 
-              pointStyle: 'circle', 
+              data: this.dataPairs,
+              parsing: {
+                xAxisKey: 'x',
+                yAxisKey: 'y'
+              },
+              pointStyle: 'circle',
               pointRadius: 8,
               pointBackgroundColor: 'rgba(255, 99, 132, 1)',
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
               showLine: false,
-          }
+            }
           ]
         },
         options: {
           responsive: true,
           scales: {
             x: {
+              type: 'linear',
+              position: 'bottom',
               display: true,
               title: {
                 display: true,
                 text: 'X Axis'
               },
               beginAtZero: true,
+              min: Math.min(...this.dataPairs.map(pair => pair.x)),
+              max: Math.max(...this.dataPairs.map(pair => pair.x))
             },
             y: {
+              type: 'linear',
               display: true,
               title: {
                 display: true,
                 text: 'Y Axis'
               },
               beginAtZero: true,
+              min: Math.min(...this.dataPairs.map(pair => pair.y)),
+              max: Math.max(...this.dataPairs.map(pair => pair.y))
             }
           }
         }
@@ -109,8 +122,7 @@ export class AppComponent implements OnInit {
   }
 
   resetChart(): void {
-    this.dataPairs = [this.defaultPair];
-    // this.dataPairs = this.defaultPair;
+    this.dataPairs = this.defaultPair;
     this.addData();
   }
 }
