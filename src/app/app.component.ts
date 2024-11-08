@@ -22,8 +22,10 @@ import { MatButtonModule } from '@angular/material/button';
 export class AppComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   defaultPair = { x: 0, y: 0 };
+  // defaultPair = [{ x: 10, y: 20 }, { x: 25, y: 30 },{ x: 90, y: 50 }];
   public chart: any;
   public dataPairs: { x: number, y: number }[] = [this.defaultPair];
+  // public dataPairs: { x: number, y: number }[] = this.defaultPair;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -44,11 +46,22 @@ export class AppComponent implements OnInit {
           labels: this.dataPairs.map(pair => pair.x),
           datasets: [
             {
-              label: 'Data',
+              label: 'Função',
               data: this.dataPairs.map(pair => pair.y),
               borderColor: '#3cba9f',
-              fill: false
-            }
+              fill: false,
+              tension: 0.3,
+            },
+            {
+              label: 'Pontos X, Y',
+              data: this.dataPairs.map(pair => pair.y), 
+              pointStyle: 'circle', 
+              pointRadius: 8,
+              pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              showLine: false,
+          }
           ]
         },
         options: {
@@ -59,14 +72,16 @@ export class AppComponent implements OnInit {
               title: {
                 display: true,
                 text: 'X Axis'
-              }
+              },
+              beginAtZero: true,
             },
             y: {
               display: true,
               title: {
                 display: true,
                 text: 'Y Axis'
-              }
+              },
+              beginAtZero: true,
             }
           }
         }
@@ -88,12 +103,14 @@ export class AppComponent implements OnInit {
     if (this.chart) {
       this.chart.data.labels = this.dataPairs.map(pair => pair.x);
       this.chart.data.datasets[0].data = this.dataPairs.map(pair => pair.y);
+      this.chart.data.datasets[1].data = this.dataPairs.map(pair => pair.y);
       this.chart.update();
     }
   }
 
   resetChart(): void {
     this.dataPairs = [this.defaultPair];
+    // this.dataPairs = this.defaultPair;
     this.addData();
   }
 }
