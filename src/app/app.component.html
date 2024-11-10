@@ -23,11 +23,32 @@
           </mat-form-field>
         </span>
       }
+      <span class="inputs">
+        <mat-form-field>
+          <mat-label>math Function</mat-label>
+          <input matInput type="text" [(ngModel)]="mathFunction" name="mathFunction" placeholder="Ex: y = 2x + 3">
+        </mat-form-field>
+        <button mat-flat-button type="button" (click)="parseMathFunction()">Plotar Função</button>
+      </span>
+      
     </form>
   </div>
 
   <div class="graph">
     <canvas #canvas></canvas>
+    @if(typeOfFunction != -1){
+      <div>
+        @if(typeOfFunction == 1){
+          <span>Função de primeiro grau</span>
+        } @else if(typeOfFunction == 2){
+          <span>Função de segundo grau</span>
+        } @else if(typeOfFunction == 3){
+          <span>Função de terceiro grau</span>
+        } @else {
+          <span>Função não identificada</span>
+        }
+      </div>
+    }
   </div>
 
 </div>
