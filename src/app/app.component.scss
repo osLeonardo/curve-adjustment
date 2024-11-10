@@ -1,8 +1,9 @@
 .view {
   display: flex;
   flex-direction: row;
-  height: 100dvh;
+  height: 90dvh;
   padding: 10px;
+  gap: 10px;
 }
 
 .graph {
@@ -30,4 +31,19 @@
   button {
     flex: 1;
   }
+}
+
+.card-function {
+  margin: 20px;
+  padding: 10px;
+  height: 19dvh;
+  justify-content: center;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.text {
+  text-align: center;
 }

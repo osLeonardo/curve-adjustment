@@ -1,56 +1,53 @@
 <div class="view">
-  <div>
-    <form (ngSubmit)="addData()">
-      <span class="buttons">
-        <span class="button-pair">
-          <button mat-flat-button type="button" (click)="addPair()">Add Pair</button>
-          <button mat-flat-button type="button" (click)="removePair()">Remove Pair</button>
-        </span>
-        <span class="button-pair">
-          <button mat-flat-button type="submit">Update Chart</button>
-          <button mat-flat-button type="button" (click)="resetChart()">Reset Chart</button>
-        </span>
+  <form (ngSubmit)="addData()">
+    <span class="buttons">
+      <span class="button-pair">
+        <button mat-flat-button type="button" (click)="addPair()">Add Pair</button>
+        <button mat-flat-button type="button" (click)="removePair()">Remove Pair</button>
       </span>
-      @for (pair of dataPairs; track pair; let i = $index) {
-        <span class="inputs">
-          <mat-form-field>
-            <mat-label>X {{i + 1}}</mat-label>
-            <input matInput type="number" [(ngModel)]="pair.x" name="x{{i}}" required>
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Y {{i + 1}}</mat-label>
-            <input matInput type="number" [(ngModel)]="pair.y" name="y{{i}}" required>
-          </mat-form-field>
-        </span>
-      }
+      <span class="button-pair">
+        <button mat-flat-button type="submit">Update Chart</button>
+        <button mat-flat-button type="button" (click)="resetChart()">Reset Chart</button>
+      </span>
+    </span>
+    @for (pair of dataPairs; track pair; let i = $index) {
       <span class="inputs">
         <mat-form-field>
-          <mat-label>math Function</mat-label>
-          <input matInput type="text" [(ngModel)]="mathFunction" name="mathFunction" placeholder="Ex: y = 2x + 3">
+          <mat-label>X {{i + 1}}</mat-label>
+          <input matInput type="number" [(ngModel)]="pair.x" name="x{{i}}" required>
         </mat-form-field>
-        <button mat-flat-button type="button" (click)="parseMathFunction()">Plotar Função</button>
+        <mat-form-field>
+          <mat-label>Y {{i + 1}}</mat-label>
+          <input matInput type="number" [(ngModel)]="pair.y" name="y{{i}}" required>
+        </mat-form-field>
       </span>
-      
-    </form>
-  </div>
+    }
+    <!-- <span class="inputs">
+      <mat-form-field>
+        <mat-label>math Function</mat-label>
+        <input matInput type="text" [(ngModel)]="mathFunction" name="mathFunction" placeholder="Ex: y = 2x + 3">
+      </mat-form-field>
+      <button mat-flat-button type="button" (click)="parseMathFunction()">Plotar Função</button>
+    </span> -->
+  </form>
 
   <div class="graph">
     <canvas #canvas></canvas>
-    @if(typeOfFunction != -1){
-      <div>
-        @if(typeOfFunction == 1){
-          <span>Função de primeiro grau</span>
-        } @else if(typeOfFunction == 2){
-          <span>Função de segundo grau</span>
-        } @else if(typeOfFunction == 3){
-          <span>Função de terceiro grau</span>
-        } @else {
-          <span>Função não identificada</span>
-        }
-      </div>
-    }
+    <mat-card class="card-function">
+      @if(typeOfFunction == 1) {
+        <span class="text title">Função de primeiro grau:</span>
+        <span class="text">y = ax + b</span>
+      } @else if(typeOfFunction == 2) {
+        <span class="text title">Função de segundo grau:</span>
+        <span class="text">y = ax² + bx + c</span>
+      } @else if(typeOfFunction == 3) {
+        <span class="text title">Função de terceiro grau:</span>
+        <span class="text">y = ax³ + bx² + cx + d</span>
+      } @else {
+        <span class="text title">Função não identificada</span>
+      }
+    </mat-card>
   </div>
-
 </div>
 
 <router-outlet />

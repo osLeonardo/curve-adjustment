@@ -1,57 +1,60 @@
 import { Component, OnInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { Chart, registerables } from 'chart.js';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
+import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     RouterOutlet,
+    CommonModule,
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule,
+    MatSelectModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
-  //defaultPair = [{ x: 0, y: 0 }];
-  // defaultPair = [ // Primeiro Grau
-  //   { x: -2, y: -1 },
-  //   { x: -1, y: 1 },
-  //   { x: 0, y: 3 },
-  //   { x: 1, y: 5 },
-  //   { x: 2, y: 7 }
-  // ];
-  // defaultPair = [ // Segundo Grau
-  //   { x: -2, y: 15 },
-  //   { x: -1, y: 8 },
-  //   { x: 0, y: 3 },
-  //   { x: 1, y: 0 },
-  //   { x: 2, y: -1 }
-  // ]
-  defaultPair = [ // Terceiro Grau
+  firstDegree = [
+    { x: -2, y: -1 },
+    { x: -1, y: 1 },
+    { x: 0, y: 3 },
+    { x: 1, y: 5 },
+    { x: 2, y: 7 }
+  ];
+  secondDegree = [
+    { x: -2, y: 15 },
+    { x: -1, y: 8 },
+    { x: 0, y: 3 },
+    { x: 1, y: 0 },
+    { x: 2, y: -1 }
+  ];
+  thirdDegree = [
     { x: -3, y: -20 },
     { x: -2, y: -4 },
     { x: -1, y: 0 },
     { x: 1, y: -4 },
     { x: 2, y: 0 },
     { x: 3, y: 16 }
-  ]
+  ];
 
-  public chart: any;
-  public dataPairs: { x: number, y: number }[] = this.defaultPair;
-  mathFunction:string = '';
-  typeOfFunction:number = -1;
+  chart: any;
+  mathFunction: string = '';
+  typeOfFunction: number = -1;
+  selectedExample: string = 'firstDegree';
+  dataPairs: { x: number, y: number }[] = this.firstDegree;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -78,23 +81,15 @@ export class AppComponent implements OnInit {
                 xAxisKey: 'x',
                 yAxisKey: 'y'
               },
+              backgroundColor: 'rgba(255, 99, 132, 1)',
               borderColor: '#3cba9f',
+              pointHoverRadius: 7,
+              pointHoverBorderWidth: 3,
+              pointBorderWidth: 3,
+              pointStyle: 'circle',
+              pointRadius: 7,
               fill: false,
               tension: 0.3,
-            },
-            {
-              label: 'Pontos X, Y',
-              data: this.dataPairs,
-              parsing: {
-                xAxisKey: 'x',
-                yAxisKey: 'y'
-              },
-              pointStyle: 'circle',
-              pointRadius: 8,
-              pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-              pointBorderColor: '#fff',
-              pointBorderWidth: 2,
-              showLine: false,
             }
           ]
         },
@@ -140,6 +135,23 @@ export class AppComponent implements OnInit {
     this.dataPairs.pop();
   }
 
+  updatePairs(): void {
+    switch (this.selectedExample) {
+      case 'firstDegree':
+        this.dataPairs = this.firstDegree;
+        break;
+      case 'secondDegree':
+        this.dataPairs = this.secondDegree;
+        break;
+      case 'thirdDegree':
+        this.dataPairs = this.thirdDegree;
+        break;
+      default:
+        this.dataPairs = this.firstDegree;
+    }
+    this.addData();
+  }
+
   addData(): void {
     if (this.chart) {
       this.chart.data.labels = this.dataPairs.map(pair => pair.x);
@@ -150,7 +162,7 @@ export class AppComponent implements OnInit {
   }
 
   resetChart(): void {
-    this.dataPairs = this.defaultPair;
+    this.dataPairs = this.firstDegree;
     this.addData();
   }
 
@@ -169,7 +181,7 @@ export class AppComponent implements OnInit {
   }
 
   // Função principal para identificar o grau do polinômio
-   identifyPolynomialDegree(): number {
+  identifyPolynomialDegree(): number {
     const yValues = this.dataPairs.map(pair => pair.y);
     console.log(yValues)
 
@@ -198,74 +210,5 @@ export class AppComponent implements OnInit {
     }
 
     return 0; // Função de grau superior a 3 ou que não é polinomial
-  }
-  parseMathFunction(): void {
-    console.log(this.identifyPolynomialDegree())
-
-    const regexPrimeiroGrau = /^y\s*=\s*([+-]?\d*\.?\d*)\s*\*?\s*x\s*([+-]?\s*\d*\.?\d*)?$/i;
-    const regexSegundoGrau = /^y\s*=\s*([+-]?\d*\.?\d*)\s*\*?\s*x\^2\s*([+-]?\s*\d*\.?\d*)\s*\*?\s*x\s*([+-]?\s*\d*\.?\d*)?$/i;
-    const regexTerceiroGrau = /^y\s*=\s*([+-]?\d*\.?\d*)?\s*\*?\s*x(\*\*3|\^3)\s*([+-]\s*\d*\.?\d*)?\s*\*?\s*x(\*\*2|\^2)?\s*([+-]\s*\d*\.?\d*)?\s*\*?\s*x\s*([+-]\s*\d*\.?\d*)?$/i;
-
-    const preProcessFunction = (func: string) => {
-      // Substitui "^" por "**" e remove espaços extras ao redor de "**"
-      return func.replace(/\^/g, '**').replace(/\s*\*\*\s*/g, '**').trim();
-    };
-    
-    // Pré-processa a função para a de terceiro grau
-    const processedMathFunction = preProcessFunction(this.mathFunction);
-
-    const matchPrimeiroGrau = this.mathFunction.match(regexPrimeiroGrau);
-    const matchSegundoGrau = this.mathFunction.match(regexSegundoGrau);
-    const matchTerceiroGrau = processedMathFunction.match(regexTerceiroGrau);
-
-    console.log(matchTerceiroGrau)
-  
-    let generatedPairs = [];
-  
-    if (matchPrimeiroGrau) {
-      this.typeOfFunction = 1;
-      const m = parseFloat(matchPrimeiroGrau[1]) || 1;
-      const b = parseFloat(matchPrimeiroGrau[2]?.replace(/\s+/g, '') || '0');
-      for (let x = -10; x <= 10; x += 0.5) {
-        const y = m * x + b;
-        generatedPairs.push({ x, y });
-      }
-  
-    } else if (matchSegundoGrau) {
-      this.typeOfFunction = 2;
-      const a = parseFloat(matchSegundoGrau[1]) || 1;
-      const b = parseFloat(matchSegundoGrau[2]?.replace(/\s+/g, '') || '0');
-      const c = parseFloat(matchSegundoGrau[3]?.replace(/\s+/g, '') || '0');
-      for (let x = -10; x <= 10; x += 0.5) {
-        const y = a * x ** 2 + b * x + c;
-        generatedPairs.push({ x, y });
-      }
-  
-    } else if (matchTerceiroGrau) {
-      this.typeOfFunction = 3;
-      const a = parseFloat(matchTerceiroGrau[1]) || 1;
-      const b = parseFloat(matchTerceiroGrau[3]?.replace(/\s+/g, '') || '0');
-      const c = parseFloat(matchTerceiroGrau[5]?.replace(/\s+/g, '') || '0');
-      const d = parseFloat(matchTerceiroGrau[6]?.replace(/\s+/g, '') || '0');
-      for (let x = -10; x <= 10; x += 0.5) {
-        const y = a * x ** 3 + b * x ** 2 + c * x + d;
-        generatedPairs.push({ x, y });
-      }
-  
-    } else {
-      alert('Função inválida. Por favor, insira uma função de primeiro, segundo grau ou terceiro grau.')
-      console.error('Função inválida. Por favor, insira uma função de primeiro, segundo grau ou terceiro grau.');
-      return;
-    }
-
-    if (this.chart) {
-      this.chart.data.datasets[0].data = generatedPairs;
-      this.chart.options.scales.x.min =Math.min(...generatedPairs.map(pair => pair.x));
-      this.chart.options.scales.x.max =Math.max(...generatedPairs.map(pair => pair.x));
-      this.chart.options.scales.y.min =Math.min(...generatedPairs.map(pair => pair.x));
-      this.chart.options.scales.y.max =Math.max(...generatedPairs.map(pair => pair.x));
-      this.chart.update();
-    }
-    console.log(this.typeOfFunction)
   }
 }
