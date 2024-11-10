@@ -5,9 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { RouterOutlet } from '@angular/router';
-import { Chart, registerables } from 'chart.js';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-root',
@@ -20,13 +18,14 @@ import { Chart, registerables } from 'chart.js';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
-    MatSelectModule,
+    MatRadioModule,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
   @ViewChild('canvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
+  default = [{ x: 0, y: 0 }];
   firstDegree = [
     { x: -2, y: -1 },
     { x: -1, y: 1 },
@@ -52,9 +51,9 @@ export class AppComponent implements OnInit {
 
   chart: any;
   mathFunction: string = '';
-  typeOfFunction: number = -1;
-  selectedExample: string = 'firstDegree';
-  dataPairs: { x: number, y: number }[] = this.firstDegree;
+  typeOfFunction: number = 0;
+  selectedExample: string = 'default';
+  dataPairs: { x: number, y: number }[] = this.default;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
@@ -105,8 +104,6 @@ export class AppComponent implements OnInit {
                 text: 'X Axis'
               },
               beginAtZero: true,
-              min: Math.min(...this.dataPairs.map(pair => pair.x)),
-              max: Math.max(...this.dataPairs.map(pair => pair.x))
             },
             y: {
               type: 'linear',
@@ -116,8 +113,6 @@ export class AppComponent implements OnInit {
                 text: 'Y Axis'
               },
               beginAtZero: true,
-              min: Math.min(...this.dataPairs.map(pair => pair.y)),
-              max: Math.max(...this.dataPairs.map(pair => pair.y))
             }
           }
         }
@@ -147,7 +142,7 @@ export class AppComponent implements OnInit {
         this.dataPairs = this.thirdDegree;
         break;
       default:
-        this.dataPairs = this.firstDegree;
+        this.dataPairs = this.default;
     }
     this.addData();
   }
@@ -156,13 +151,13 @@ export class AppComponent implements OnInit {
     if (this.chart) {
       this.chart.data.labels = this.dataPairs.map(pair => pair.x);
       this.chart.data.datasets[0].data = this.dataPairs.map(pair => pair.y);
-      this.chart.data.datasets[1].data = this.dataPairs.map(pair => pair.y);
       this.chart.update();
+      this.typeOfFunction = this.identifyPolynomialDegree();
     }
   }
 
   resetChart(): void {
-    this.dataPairs = this.firstDegree;
+    this.dataPairs = this.default;
     this.addData();
   }
 
@@ -182,6 +177,10 @@ export class AppComponent implements OnInit {
 
   // Função principal para identificar o grau do polinômio
   identifyPolynomialDegree(): number {
+    if (this.dataPairs.length < 2) {
+      return 0;
+    }
+
     const yValues = this.dataPairs.map(pair => pair.y);
     console.log(yValues)
 

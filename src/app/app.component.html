@@ -1,5 +1,10 @@
 <div class="view">
   <form (ngSubmit)="addData()">
+    <mat-radio-group [(ngModel)]="selectedExample" (change)="updatePairs()" name="functionType">
+      <mat-radio-button value="firstDegree">Primeiro Grau</mat-radio-button>
+      <mat-radio-button value="secondDegree">Segundo Grau</mat-radio-button>
+      <mat-radio-button value="thirdDegree">Terceiro Grau</mat-radio-button>
+    </mat-radio-group>
     <span class="buttons">
       <span class="button-pair">
         <button mat-flat-button type="button" (click)="addPair()">Add Pair</button>
