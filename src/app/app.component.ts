@@ -43,12 +43,13 @@ export class AppComponent implements OnInit {
     { x: 2, y: -1 }
   ];
   thirdDegree = [
-    { x: -3, y: -20 },
-    { x: -2, y: -4 },
-    { x: -1, y: 0 },
-    { x: 1, y: -4 },
-    { x: 2, y: 0 },
-    { x: 3, y: 16 }
+    { x: -2, y: -31 },
+    { x: -1, y: -7 },
+    { x: 0, y: 3 },
+    { x: 1, y: 5 },
+    { x: 2, y: 5 },
+    { x: 3, y: 9 },
+    { x: 4, y: 23 }
   ];
 
   chart: any;
@@ -151,10 +152,10 @@ export class AppComponent implements OnInit {
 
   addData(): void {
     if (this.chart) {
+      this.typeOfFunction = this.identifyPolynomialDegree();
       this.chart.data.labels = this.dataPairs.map(pair => pair.x);
       this.chart.data.datasets[0].data = this.dataPairs.map(pair => pair.y);
       this.chart.update();
-      this.typeOfFunction = this.identifyPolynomialDegree();
     }
   }
 
@@ -163,8 +164,7 @@ export class AppComponent implements OnInit {
     this.addData();
   }
 
-  // Função para calcular as diferenças de uma lista de valores
-   calculateDifferences(values: number[]): number[] {
+  calculateDifferences(values: number[]): number[] {
     const differences = [];
     for (let i = 1; i < values.length; i++) {
       differences.push(values[i] - values[i - 1]);
@@ -172,44 +172,32 @@ export class AppComponent implements OnInit {
     return differences;
   }
 
-  // Função para verificar se um array de números é constante (se todos os valores são iguais)
-   isConstant(arr: number[]): boolean {
+  isConstant(arr: number[]): boolean {
     return arr.every(val => val === arr[0]);
   }
 
-  // Função principal para identificar o grau do polinômio
   identifyPolynomialDegree(): number {
     if (this.dataPairs.length < 2) {
       return 0;
     }
-
+  
     const yValues = this.dataPairs.map(pair => pair.y);
-    console.log(yValues)
-
-    // Primeiras diferenças
-    let firstDifferences = this.calculateDifferences(yValues);
-    console.log("Primeiras Diferenças:", firstDifferences);
-
+  
+    let firstDifferences = this.calculateDifferences(yValues);  
     if (this.isConstant(firstDifferences)) {
-      return 1; // Função de primeiro grau (linear)
+      return 1;
     }
-
-    // Segundas diferenças
-    let secondDifferences = this.calculateDifferences(firstDifferences);
-    console.log("Segundas Diferenças:", secondDifferences);
-
+  
+    let secondDifferences = this.calculateDifferences(firstDifferences);  
     if (this.isConstant(secondDifferences)) {
-      return 2; // Função de segundo grau (quadrática)
+      return 2;
     }
-
-    // Terceiras diferenças
-    let thirdDifferences = this.calculateDifferences(secondDifferences);
-    console.log("Terceiras Diferenças:", thirdDifferences);
-
+  
+    let thirdDifferences = this.calculateDifferences(secondDifferences);  
     if (this.isConstant(thirdDifferences)) {
-      return 3; // Função de terceiro grau (cúbica)
+      return 3;
     }
-
-    return 0; // Função de grau superior a 3 ou que não é polinomial
+  
+    return 0;
   }
 }
