@@ -1,13 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser, CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { Chart, registerables } from 'chart.js';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, ElementRef, Inject, OnInit, PLATFORM_ID, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { RouterOutlet } from '@angular/router';
+import { Chart, registerables } from 'chart.js';
 
 @Component({
   selector: 'app-root',
@@ -81,8 +81,8 @@ export class AppComponent implements OnInit {
                 xAxisKey: 'x',
                 yAxisKey: 'y'
               },
-              backgroundColor: 'rgba(255, 99, 132, 1)',
-              borderColor: '#3cba9f',
+              backgroundColor: '#f29ee7',
+              borderColor: '#5b005b',
               pointHoverRadius: 7,
               pointHoverBorderWidth: 3,
               pointBorderWidth: 3,
